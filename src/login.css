@@ -105,6 +105,24 @@ body{ margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, 
     border-color: rgba(220,38,38,.55);
     box-shadow: 0 0 0 4px var(--ring);
 }
+
+/* INPUT TEXT FIX */
+.input {
+    color: #111827;              /* koyu gri - yazı */
+    background-color: #ffffff;   /* beyaz arka plan */
+}
+
+.input::placeholder {
+    color: #9ca3af;              /* açık gri placeholder */
+    opacity: 1;
+}
+
+/* Autofill (Chrome) fix */
+input:-webkit-autofill {
+    -webkit-text-fill-color: #111827 !important;
+    box-shadow: 0 0 0px 1000px white inset;
+}
+
 .pw-wrap{
     display:flex; gap: 10px; align-items:center;
 }
@@ -175,4 +193,49 @@ body{ margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, 
 .foot-muted{
     color: rgba(17,24,39,.55);
     font-size: 12px;
+}
+
+.link-btn {
+    background: none;
+    border: none;
+    color: #dc2626;
+    font-weight: 700;
+    margin-top: 12px;
+    cursor: pointer;
+}
+
+.link-btn:hover {
+    text-decoration: underline;
+}
+
+.actions{
+    display: grid;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.auth-footer{
+    background: rgba(255,255,255,.55);
+}
+
+.btn-secondary{
+    height: 44px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 800;
+    letter-spacing: .2px;
+
+    color: #991b1b;
+    background: rgba(220, 38, 38, 0.08);
+    border: 1px solid rgba(220, 38, 38, 0.28);
+
+    transition: transform .06s ease, filter .12s ease, background .12s ease;
+}
+
+.btn-secondary:hover{
+    background: rgba(220, 38, 38, 0.12);
+}
+
+.btn-secondary:active{
+    transform: translateY(1px);
 }
