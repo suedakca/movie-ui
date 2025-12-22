@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { login } from "./api";
 import "./login.css";
 
-export default function LoginPage({ onAuthed, onGoRegister }) {
+export default function LoginPage({ onAuthed, onGoRegister  }) {
     const [username, setUsername] = useState("suedaakca");
     const [password, setPassword] = useState("12345");
     const [showPw, setShowPw] = useState(false);

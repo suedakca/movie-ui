@@ -5,11 +5,10 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5211";
 
 export default function AdminPanel({ token, onLogout }) {
     const [view, setView] = useState("movies"); // "movies" | "directors" | "genres"
-    const [tab, setTab] = useState("movies");
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [err, setErr] = useState("");
-
+    const [genreIds, setGenreIds] = useState([]);
     const [form, setForm] = useState({
         id: "",
         name: "",
@@ -19,6 +18,7 @@ export default function AdminPanel({ token, onLogout }) {
     });
     
     const [directors, setDirectors] = useState([]);
+    const [directorId, setDirectorId] = useState("");
     const [dForm, setDForm] = useState({ id: "", firstName: "", lastName: "", isRetired: false });
     const [genres, setGenres] = useState([]);
     const [gForm, setGForm] = useState({ id: "", name: "" });
@@ -81,7 +81,11 @@ export default function AdminPanel({ token, onLogout }) {
     }
 
     useEffect(() => {
-        if (view === "movies") loadMovies();
+        if (view === "movies") {
+            loadMovies();
+            loadDirectors();
+            loadGenres();
+        }
         if (view === "directors") loadDirectors();
         if (view === "genres") loadGenres();
     }, [cleanToken, view]);
@@ -97,29 +101,33 @@ export default function AdminPanel({ token, onLogout }) {
     }
     async function addMovie() {
         try {
+            setErr("");
             await apiFetch("/api/Movies", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     name: form.name,
                     releaseDate: form.releaseDate || null,
-                    totalRevenue: Number(form.totalRevenue || 0),
-                    directorId: Number(form.directorId || 0),
+                    totaRevenue: Number(form.totalRevenue || 0),  
+                    directorId: Number(directorId || 0),         
+                    genreIds: genreIds,                    
                 }),
             });
             await loadMovies();
             resetForm();
+            setDirectorId("");
+            setGenreIds([]);
         } catch (e) {
             setErr(e?.message || "Add failed");
         }
     }
-
     async function updateMovie() {
         if (!form.id) {
             setErr("Select a movie to update.");
             return;
         }
         try {
+            setErr("");
             await apiFetch("/api/Movies", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -127,12 +135,15 @@ export default function AdminPanel({ token, onLogout }) {
                     id: Number(form.id),
                     name: form.name,
                     releaseDate: form.releaseDate || null,
-                    totalRevenue: Number(form.totalRevenue || 0),
-                    directorId: Number(form.directorId || 0),
+                    totaRevenue: Number(form.totalRevenue || 0),  
+                    directorId: Number(directorId || 0),         
+                    genreIds: genreIds,                       
                 }),
             });
             await loadMovies();
             resetForm();
+            setDirectorId("");
+            setGenreIds([]);
         } catch (e) {
             setErr(e?.message || "Update failed");
         }
@@ -461,9 +472,7 @@ export default function AdminPanel({ token, onLogout }) {
                     <div className="admin-grid">
                         <section className="admin-card">
                             <h2>{form.id ? "Edit Movie" : "Add Movie"}</h2>
-
                             {err && <div className="error">{err}</div>}
-
                             <label className="field">
                                 <span>Name</span>
                                 <input
@@ -485,17 +494,37 @@ export default function AdminPanel({ token, onLogout }) {
                                 <span>Total Revenue</span>
                                 <input
                                     value={form.totalRevenue}
-                                    onChange={(e) => setForm((f) => ({ ...f, totaRevenueF: e.target.value }))}
+                                    onChange={(e) => setForm((f) => ({ ...f, totalRevenue: e.target.value }))}
                                 />
                             </label>
 
-                            <label className="field">
-                                <span>Director Name</span>
-                                <input
-                                    value={form.director}
-                                    onChange={(e) => setForm((f) => ({ ...f, director: e.target.value }))}
-                                />
-                            </label>
+                            <select value={directorId} onChange={(e) => setDirectorId(e.target.value)}>
+                                <option value="">Select director</option>
+                                {directors.map((d) => (
+                                    <option key={d.id} value={d.id}>
+                                        {d.firstName} {d.lastName}
+                                    </option>
+                                ))}
+                            </select>
+                            <div className="genre-box">
+                                {Array.isArray(genres) && genres.map((g) => {
+                                    const gid = Number(g.id);
+                                    return (
+                                        <label key={gid} className="checkbox-row">
+                                            <input
+                                                type="checkbox"
+                                                checked={genreIds.includes(gid)}
+                                                onChange={() =>
+                                                    setGenreIds((prev) =>
+                                                        prev.includes(gid) ? prev.filter((x) => x !== gid) : [...prev, gid]
+                                                    )
+                                                }
+                                            />
+                                            <span>{g.name}</span>
+                                        </label>
+                                    );
+                                })}
+                            </div>
 
                             <div className="row">
                                 <button className="btn" onClick={addMovie} disabled={!form.name || !!form.id}>

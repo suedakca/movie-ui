@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import LoginPage from "./LoginPage";
 import MoviesPage from "./MoviesPage";
 import AdminPanel from "./AdminPanel";
-
+import RegisterPage from "./RegisterPage";
 export default function App() {
     const [token, setToken] = useState(localStorage.getItem("token") || "");
     const [role, setRole] = useState("");
-
+    const [mode, setMode] = useState("login");
     useEffect(() => {
         if (!token) { setRole(""); return; }
         const r = getRoleFromToken(token);
@@ -14,7 +14,6 @@ export default function App() {
     }, [token]);
 
     function handleAuthed(t) {
-        // t bazen "Bearer eyJ..." gelebilir → normalize et
         const clean = String(t).replace(/^Bearer\s+/i, "").trim();
         localStorage.setItem("token", clean);
         setToken(clean);
@@ -26,16 +25,17 @@ export default function App() {
         setRole("");
     }
 
-    if (!token) return <LoginPage onAuthed={handleAuthed} />;
-
+    if (!token) {
+        if (mode === "register") {
+            return <RegisterPage onBack={() => setMode("login")} />;
+        }
+        return <LoginPage onAuthed={handleAuthed} onGoRegister={() => setMode("register")}  />;
+    }
     if (role === "Admin") {
         return <AdminPanel token={token} onLogout={logout} />;
     }
-
     return <MoviesPage token={token} onLogout={logout} />;
 }
-
-// JWT decode (library yok, basit)
 function getRoleFromToken(rawToken) {
     try {
         const token = String(rawToken).replace(/^Bearer\s+/i, "").trim();
