@@ -230,3 +230,18 @@
         padding: 20px;
     }
 }
+
+.admin-actions .ghost.active {
+    border: 1px solid rgba(255,255,255,0.35);
+    background: rgba(255,255,255,0.08);
+}
+.field-inline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.admin-actions > button {
+    margin-right: 10px;
+}
