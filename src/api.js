@@ -12,8 +12,6 @@ export async function login(userName, password) {
 
     const text = await res.text();
     if (!res.ok) throw new Error(text || `Login failed (${res.status})`);
-
-    // Bazı backend'ler boş dönebilir diye
     try {
         return JSON.parse(text);
     } catch {

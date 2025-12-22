@@ -21,13 +21,15 @@ export default function LoginPage({ onAuthed, onGoRegister }) {
         setLoading(true);
         try {
             const data = await login(username, password);
-            const token =
-                data.token || data.accessToken || data.jwt || data?.data?.token || "";
+            console.log("Returning value: ", data);
+            const token = data.token;
 
-            if (!token) throw new Error("Token bulunamadı. Login response'u kontrol et.");
+            const cleanToken = token.startsWith("Bearer ")
+                ? token.replace("Bearer ", "")
+                : token;
 
-            localStorage.setItem("token", token);
-            onAuthed?.(token);
+            localStorage.setItem("token", cleanToken);
+            onAuthed?.(cleanToken);
         } catch (e2) {
             setErr(e2?.message || "Login failed.");
         } finally {

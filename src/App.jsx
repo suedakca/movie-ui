@@ -1,26 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoginPage from "./LoginPage";
-import RegisterPage from "./RegisterPage";
 import MoviesPage from "./MoviesPage";
+import AdminPanel from "./AdminPanel";
 
 export default function App() {
-    const [token, setToken] = useState(localStorage.getItem("token"));
-    const [page, setPage] = useState("login"); // login | register
+    const [token, setToken] = useState(localStorage.getItem("token") || "");
+    const [role, setRole] = useState("");
 
-    if (!token && page === "login")
-        return <LoginPage onAuthed={setToken} onGoRegister={() => setPage("register")} />;
+    useEffect(() => {
+        if (!token) { setRole(""); return; }
+        const r = getRoleFromToken(token);
+        setRole(r);
+    }, [token]);
 
-    if (!token && page === "register")
-        return <RegisterPage onBack={() => setPage("login")} />;
+    function handleAuthed(t) {
+        // t bazen "Bearer eyJ..." gelebilir → normalize et
+        const clean = String(t).replace(/^Bearer\s+/i, "").trim();
+        localStorage.setItem("token", clean);
+        setToken(clean);
+    }
 
-    return (
-        <MoviesPage
-            token={token}
-            onLogout={() => {
-                localStorage.removeItem("token");
-                setToken(null);
-                setPage("login");
-            }}
-        />
-    );
+    function logout() {
+        localStorage.removeItem("token");
+        setToken("");
+        setRole("");
+    }
+
+    if (!token) return <LoginPage onAuthed={handleAuthed} />;
+
+    if (role === "Admin") {
+        return <AdminPanel token={token} onLogout={logout} />;
+    }
+
+    return <MoviesPage token={token} onLogout={logout} />;
+}
+
+// JWT decode (library yok, basit)
+function getRoleFromToken(rawToken) {
+    try {
+        const token = String(rawToken).replace(/^Bearer\s+/i, "").trim();
+        const payload = token.split(".")[1];
+        const json = JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
+
+        // claim bazen: "role" veya ".../claims/role"
+        const role =
+            json.role ||
+            json["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||
+            "";
+
+        return role;
+    } catch {
+        return "";
+    }
 }

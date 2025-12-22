@@ -1,0 +1,232 @@
+/* ========== ROOT ========== */
+:root {
+    --bg-main: radial-gradient(1200px 600px at 10% 10%, #2a0f14, #0b0b0f 60%);
+    --panel-bg: #f3f3f3;
+    --panel-bg-soft: #ffffff;
+    --text-dark: #121212;
+    --text-muted: #6b7280;
+    --accent: #ef4444;
+    --accent-soft: #fee2e2;
+    --danger: #dc2626;
+    --border-soft: rgba(0,0,0,0.08);
+    --shadow-soft: 0 20px 40px rgba(0,0,0,0.25);
+}
+
+/* ========== LAYOUT ========== */
+.admin-shell {
+    min-height: 100vh;
+    background: var(--bg-main);
+    color: var(--text-dark);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ========== TOPBAR ========== */
+.admin-topbar {
+    height: 68px;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(90deg, #190a0d, #0b0b0f);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.admin-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+}
+
+.admin-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+}
+
+.admin-title {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.admin-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+}
+
+.admin-actions .ghost {
+    border: 1px solid rgba(255,255,255,0.25);
+    background: transparent;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.admin-actions .ghost:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* ========== MAIN ========== */
+.admin-main {
+    flex: 1;
+    padding: 36px;
+}
+
+/* GRID */
+.admin-grid {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 28px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ========== CARDS ========== */
+.admin-card {
+    background: var(--panel-bg);
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: var(--shadow-soft);
+}
+
+.admin-card h2 {
+    margin: 0 0 16px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* ========== FORM ========== */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.field span {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.field input {
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid var(--border-soft);
+    padding: 0 12px;
+    font-size: 14px;
+    outline: none;
+}
+
+.field input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* FORM BUTTONS */
+.row {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.btn {
+    flex: 1;
+    height: 42px;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    flex: 1;
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid var(--border-soft);
+    background: #fff;
+    cursor: pointer;
+}
+
+/* ========== LIST ========== */
+.admin-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-item {
+    background: var(--panel-bg-soft);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--border-soft);
+}
+
+.admin-item-main {
+    cursor: pointer;
+}
+
+.admin-item-main .name {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.admin-item-main .meta {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* DELETE BUTTON */
+.danger {
+    border: none;
+    background: transparent;
+    color: var(--danger);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.danger:hover {
+    text-decoration: underline;
+}
+
+/* ========== STATES ========== */
+.state {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.error {
+    background: var(--accent-soft);
+    color: var(--danger);
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 900px) {
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-main {
+        padding: 20px;
+    }
+}
