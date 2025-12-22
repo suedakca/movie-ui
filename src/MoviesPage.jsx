@@ -112,7 +112,7 @@ export default function MoviesPage({ token, onLogout }) {
     }, [movies, q, sort]);
 
     // =========================
-    // DETAILS VIEW (şık tasarım)
+    // DETAILS VIEW
     // =========================
     if (selected && typeof selected === "object") {
         return (
@@ -149,6 +149,7 @@ export default function MoviesPage({ token, onLogout }) {
                             </div>
 
                             <div className="detail-badges">
+                                <span className="badge soft"> Genre: {selected?.genres?.length ? selected.genres.join(", ") : "-"}</span>
                                 <span className="badge soft">ID: {selected.id ?? "-"}</span>
                                 <span className="badge soft">
                   Director: {selected.director ?? "-"}
