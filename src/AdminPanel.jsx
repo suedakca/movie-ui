@@ -289,11 +289,19 @@ export default function AdminPanel({ token, onLogout }) {
 
                             <label className="field field-inline">
                                 <span>Retired</span>
-                                <input
-                                    type="checkbox"
-                                    checked={!!dForm.isRetired}
-                                    onChange={(e) => setDForm((f) => ({ ...f, isRetired: e.target.checked }))}
-                                />
+                                <label className="switch">
+                                    <input
+                                        type="checkbox"
+                                        checked={!!dForm.isRetired}
+                                        onChange={(e) =>
+                                            setDForm((f) => ({ ...f, isRetired: e.target.checked }))
+                                        }
+                                    />
+                                    <span className="slider" />
+                                    <span className="switchLabel">
+    {dForm.isRetired ? "Retired" : "Active"}
+  </span>
+                                </label>
                             </label>
 
                             <div className="row">
@@ -470,7 +478,7 @@ export default function AdminPanel({ token, onLogout }) {
                 {/* MOVIES VIEW */}
                 {view === "movies" && (
                     <div className="admin-grid">
-                        <section className="admin-card">
+                        <section className="admin-card edit-card">
                             <h2>{form.id ? "Edit Movie" : "Add Movie"}</h2>
                             {err && <div className="error">{err}</div>}
                             <label className="field">
@@ -498,19 +506,36 @@ export default function AdminPanel({ token, onLogout }) {
                                 />
                             </label>
 
-                            <select value={directorId} onChange={(e) => setDirectorId(e.target.value)}>
-                                <option value="">Select director</option>
-                                {directors.map((d) => (
-                                    <option key={d.id} value={d.id}>
-                                        {d.firstName} {d.lastName}
-                                    </option>
-                                ))}
-                            </select>
+                            <div className="field">
+                                <label className="label">Director</label>
+
+                                <div className="selectWrap">
+                                    <select
+                                        className="select"
+                                        value={directorId}
+                                        onChange={(e) => setDirectorId(e.target.value)}
+                                    >
+                                        <option value="" disabled>
+                                            Select director
+                                        </option>
+                                        {directors.map((d) => (
+                                            <option key={d.id} value={d.id}>
+                                                {d.firstName} {d.lastName}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                    {/* dropdown arrow */}
+                                    <svg className="chev" viewBox="0 0 20 20" aria-hidden="true">
+                                        <path d="M5.5 7.5l4.5 5 4.5-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
                             <div className="genre-box">
                                 {Array.isArray(genres) && genres.map((g) => {
                                     const gid = Number(g.id);
                                     return (
-                                        <label key={gid} className="checkbox-row">
+                                        <label key={gid} className={`genreChip ${genreIds.includes(gid) ? "isOn" : ""}`}>
                                             <input
                                                 type="checkbox"
                                                 checked={genreIds.includes(gid)}
@@ -520,7 +545,8 @@ export default function AdminPanel({ token, onLogout }) {
                                                     )
                                                 }
                                             />
-                                            <span>{g.name}</span>
+                                            <span className="genreChip__text">{g.name}</span>
+                                            <span className="genreChip__check" aria-hidden="true">✓</span>
                                         </label>
                                     );
                                 })}
